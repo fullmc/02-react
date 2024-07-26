@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
+	const redirectUrl = process.env.REACT_APP_SPOTIFY_REDIRECT_URI;
+	const endpoint = process.env.REACT_APP_SPOTIFY_ENDPOINT;
+	const responseType = "token";
+
+	return (
+		<div className="App">
+			<h1>API Endpoint</h1>
+			<a
+				href={`${endpoint}?client_id=${clientSecret}&redirect_uri=${redirectUrl}&response_type=${responseType}`}>
+				API endpoint
+			</a>
+		</div>
+	);
 }
 
 export default App;
