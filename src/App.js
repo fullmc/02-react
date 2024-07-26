@@ -7,6 +7,8 @@ import {
 	Route,
 	useNavigate,
 } from "react-router-dom";
+import CreatePlaylist from "./playlist";
+import Home from "./home";
 
 const CLIENT_SECRET = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
 const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
@@ -65,71 +67,18 @@ const App = () => {
 
 	return (
 		<div className="App">
-			<header className="App-header">
-				<h1>Spotify Playlist Creator</h1>
-				{!token ? (
-					<button onClick={handleLogin}>Login to Spotify</button>
-				) : (
-					<div>
-						<p>Logged in!</p>
-						<button onClick={() => navigate("/create-playlist")}>
-							Create Playlist
-						</button>
-					</div>
-				)}
-			</header>
 			<Routes>
+				<Route
+					path="/"
+					element={
+						<Home handleLogin={handleLogin} token={token} navigate={navigate} />
+					}
+				/>
 				<Route
 					path="/create-playlist"
 					element={<CreatePlaylist token={token} userId={userId} />}
 				/>
 			</Routes>
-		</div>
-	);
-};
-
-const CreatePlaylist = ({ token, userId }) => {
-	const [playlistName, setPlaylistName] = useState("");
-	const [playlistDescription, setPlaylistDescription] = useState("");
-
-	const handleCreatePlaylist = async () => {
-		try {
-			const response = await axios.post(
-				`https://api.spotify.com/v1/users/${userId}/playlists`,
-				{
-					name: playlistName,
-					description: playlistDescription,
-					public: false,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-						"Content-Type": "application/json",
-					},
-				}
-			);
-			console.log("Playlist created:", response.data);
-		} catch (error) {
-			console.error("Error creating playlist:", error);
-		}
-	};
-
-	return (
-		<div>
-			<h2>Create Playlist</h2>
-			<input
-				type="text"
-				placeholder="Playlist Name"
-				value={playlistName}
-				onChange={(e) => setPlaylistName(e.target.value)}
-			/>
-			<input
-				type="text"
-				placeholder="Playlist Description"
-				value={playlistDescription}
-				onChange={(e) => setPlaylistDescription(e.target.value)}
-			/>
-			<button onClick={handleCreatePlaylist}>Create Playlist</button>
 		</div>
 	);
 };

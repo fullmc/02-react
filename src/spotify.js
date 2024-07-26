@@ -4,7 +4,7 @@ const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
 const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
 
-export const getToken = async (code) => {
+const getToken = async (code) => {
 	try {
 		const response = await axios.post(
 			"https://accounts.spotify.com/api/token",
@@ -28,3 +28,5 @@ export const getToken = async (code) => {
 		throw error;
 	}
 };
+
+export default getToken;
