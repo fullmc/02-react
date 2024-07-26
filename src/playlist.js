@@ -7,6 +7,7 @@ const CreatePlaylist = ({ token }) => {
 	const [playlistName, setPlaylistName] = useState("");
 	const [playlistDescription, setPlaylistDescription] = useState("");
 	const [error, setError] = useState(null);
+	const [playlists, setPlaylists] = useState([]);
 
 	useEffect(() => {
 		if (token) {
@@ -43,6 +44,10 @@ const CreatePlaylist = ({ token }) => {
 				}
 			);
 			console.log("Playlist created:", response.data);
+			setPlaylists((prevPlaylists) => [...prevPlaylists, response.data]); // Ajoute la nouvelle playlist au tableau des playlists
+			setPlaylistName(""); // Réinitialise les champs de saisie
+			setPlaylistDescription("");
+			setError(null); // Réinitialise les erreurs
 		} catch (error) {
 			console.error("Error creating playlist:", error);
 			setError("Error creating playlist");
@@ -66,6 +71,14 @@ const CreatePlaylist = ({ token }) => {
 				onChange={(e) => setPlaylistDescription(e.target.value)}
 			/>
 			<button onClick={handleCreatePlaylist}>Create Playlist</button>
+			<h3>Created Playlists</h3>
+			<ul>
+				{playlists.map((playlist) => (
+					<li key={playlist.id}>
+						<strong>{playlist.name}</strong> - {playlist.description}
+					</li>
+				))}
+			</ul>
 		</div>
 	);
 };
