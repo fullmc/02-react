@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
-import { Routes, Route, useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./App.css";
+import {
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	useNavigate,
+} from "react-router-dom";
 
 const CLIENT_SECRET = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
 const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const REDIRECT_URI = "http://localhost:3000";
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
+const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
 const RESPONSE_TYPE = "code";
 
 const App = () => {
 	const [token, setToken] = useState("");
+	const [userId, setUserId] = useState("");
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -20,9 +27,9 @@ const App = () => {
 		if (code) {
 			axios
 				.post(
-					"https://accounts.spotify.com/api/token",
+					TOKEN_ENDPOINT,
 					new URLSearchParams({
-						grant_type: "client_credentials",
+						grant_type: "authorization_code",
 						code: code,
 						redirect_uri: REDIRECT_URI,
 						client_id: CLIENT_ID,
@@ -36,6 +43,14 @@ const App = () => {
 				)
 				.then((response) => {
 					setToken(response.data.access_token);
+					return axios.get("https://api.spotify.com/v1/me", {
+						headers: {
+							Authorization: `Bearer ${response.data.access_token}`,
+						},
+					});
+				})
+				.then((response) => {
+					setUserId(response.data.id);
 					window.history.pushState({}, null, "/"); // Remove code from URL
 				})
 				.catch((error) => console.error("Error fetching token:", error));
@@ -43,7 +58,9 @@ const App = () => {
 	}, []);
 
 	const handleLogin = () => {
-		window.location = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=playlist-modify-private playlist-modify-public`;
+		const scope = "playlist-modify-private playlist-modify-public";
+		const authURL = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&response_type=${RESPONSE_TYPE}&redirect_uri=${REDIRECT_URI}&scope=${scope}`;
+		window.location = authURL;
 	};
 
 	return (
@@ -64,30 +81,16 @@ const App = () => {
 			<Routes>
 				<Route
 					path="/create-playlist"
-					element={<CreatePlaylist token={token} />}
+					element={<CreatePlaylist token={token} userId={userId} />}
 				/>
 			</Routes>
 		</div>
 	);
 };
 
-const CreatePlaylist = ({ token }) => {
-	const [userId, setUserId] = useState("");
+const CreatePlaylist = ({ token, userId }) => {
 	const [playlistName, setPlaylistName] = useState("");
 	const [playlistDescription, setPlaylistDescription] = useState("");
-
-	useEffect(() => {
-		axios
-			.get("https://api.spotify.com/v1/me", {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
-			.then((response) => {
-				setUserId(response.data.id);
-			})
-			.catch((error) => console.error("Error fetching user ID:", error));
-	}, [token]);
 
 	const handleCreatePlaylist = async () => {
 		try {

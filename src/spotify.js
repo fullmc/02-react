@@ -9,7 +9,7 @@ export const getToken = async (code) => {
 		const response = await axios.post(
 			"https://accounts.spotify.com/api/token",
 			new URLSearchParams({
-				grant_type: "client_credentials",
+				grant_type: "authorization_code",
 				code: code,
 				redirect_uri: REDIRECT_URI,
 				client_id: CLIENT_ID,
