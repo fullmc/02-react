@@ -39,6 +39,11 @@ const PlaylistDetails = ({ token }) => {
 			return;
 		}
 
+		if (tracks.some((track) => track.track.uri === trackUri)) {
+			setError("Track already exists in the playlist");
+			return;
+		}
+
 		try {
 			await axios.post(
 				`https://api.spotify.com/v1/playlists/${id}/tracks`,
