@@ -7,7 +7,7 @@ const PlaylistDetails = ({ token }) => {
 	const [playlist, setPlaylist] = useState(null);
 	const [tracks, setTracks] = useState([]);
 	const [error, setError] = useState(null);
-	const [trackUrl, setTrackUrl] = useState("");
+	const [trackUri, setTrackUri] = useState("");
 
 	useEffect(() => {
 		const fetchPlaylistDetails = async () => {
@@ -33,6 +33,42 @@ const PlaylistDetails = ({ token }) => {
 		}
 	}, [token, id]);
 
+	const handleAddTrackToPlaylist = async () => {
+		if (!/^spotify:track:[\w\d]+$/.test(trackUri)) {
+			setError("Invalid track URI");
+			return;
+		}
+
+		try {
+			await axios.post(
+				`https://api.spotify.com/v1/playlists/${id}/tracks`,
+				{
+					uris: [trackUri],
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+				}
+			);
+			const response = await axios.get(
+				`https://api.spotify.com/v1/playlists/${id}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			setPlaylist(response.data);
+			setTracks(response.data.tracks.items);
+			setTrackUri("");
+		} catch (error) {
+			console.error("Error adding track to playlist:", error);
+			setError("Error adding track to playlist");
+		}
+	};
+
 	return (
 		<div>
 			{error && <p style={{ color: "red" }}>{error}</p>}
@@ -50,11 +86,11 @@ const PlaylistDetails = ({ token }) => {
 					</ul>
 					<input
 						type="text"
-						placeholder="Track URL"
-						value={trackUrl}
-						onChange={(e) => setTrackUrl(e.target.value)}
+						placeholder="Track URI"
+						value={trackUri}
+						onChange={(e) => setTrackUri(e.target.value)}
 					/>
-					<button>Add Track</button>
+					<button onClick={handleAddTrackToPlaylist}>Add Track</button>
 				</div>
 			) : (
 				<p>Loading...</p>

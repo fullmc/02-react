@@ -80,7 +80,7 @@ const App = () => {
 					element={<CreatePlaylist token={token} userId={userId} />}
 				/>
 				<Route
-					path="/playlists/:playlistId"
+					path="/playlists/:id"
 					element={<PlaylistDetails token={token} userId={userId} />}
 				/>
 			</Routes>
