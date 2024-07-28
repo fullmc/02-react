@@ -9,7 +9,9 @@ const PlaylistDetails = ({ token }) => {
 	const [error, setError] = useState(null);
 	const [trackUri, setTrackUri] = useState("");
 	const [newPlaylistName, setNewPlaylistName] = useState("");
+	const [newPlaylistDescription, setNewPlaylistDescription] = useState("");
 	const [isEditingName, setIsEditingName] = useState(false);
+	const [isEditingDescription, setIsEditingDescription] = useState(false);
 
 	useEffect(() => {
 		const fetchPlaylistDetails = async () => {
@@ -133,6 +135,32 @@ const PlaylistDetails = ({ token }) => {
 		}
 	};
 
+	const handleUpdatePlaylistDescription = async () => {
+		try {
+			await axios.put(
+				`https://api.spotify.com/v1/playlists/${id}`,
+				{
+					description: newPlaylistDescription,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+				}
+			);
+			setPlaylist((prevPlaylist) => ({
+				...prevPlaylist,
+				description: newPlaylistDescription,
+			}));
+			setIsEditingDescription(false);
+			setError(null); // Clear any previous errors
+		} catch (error) {
+			console.error("Error updating playlist description:", error);
+			setError("Error updating playlist description");
+		}
+	};
+
 	return (
 		<div>
 			{error && <p style={{ color: "red" }}>{error}</p>}
@@ -153,6 +181,21 @@ const PlaylistDetails = ({ token }) => {
 						<button onClick={() => setIsEditingName(true)}>Update Name</button>
 					)}
 					<p>{playlist.description}</p>
+					{isEditingDescription ? (
+						<div>
+							<input
+								type="text"
+								value={newPlaylistDescription}
+								onChange={(e) => setNewPlaylistDescription(e.target.value)}
+								placeholder="New Playlist Description"
+							/>
+							<button onClick={handleUpdatePlaylistDescription}>Save</button>
+						</div>
+					) : (
+						<button onClick={() => setIsEditingDescription(true)}>
+							Update Description
+						</button>
+					)}
 					<ul>
 						{tracks.map((track) => (
 							<li key={track.track.id}>
