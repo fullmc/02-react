@@ -34,7 +34,7 @@ const PlaylistDetails = ({ token }) => {
 	}, [token, id]);
 
 	const handleAddTrackToPlaylist = async () => {
-		if (!/^spotify:track:[\w\d]+$/.test(trackUri)) {
+		if (!/^spotify:(track|episode):[\w\d]+$/.test(trackUri)) {
 			setError("Invalid track URI");
 			return;
 		}
