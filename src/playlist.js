@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./playlist.css";
 
 const CreatePlaylist = ({ token }) => {
@@ -8,6 +9,7 @@ const CreatePlaylist = ({ token }) => {
 	const [playlistDescription, setPlaylistDescription] = useState("");
 	const [error, setError] = useState(null);
 	const [playlists, setPlaylists] = useState([]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (token) {
@@ -44,10 +46,10 @@ const CreatePlaylist = ({ token }) => {
 				}
 			);
 			console.log("Playlist created:", response.data);
-			setPlaylists((prevPlaylists) => [...prevPlaylists, response.data]); // Ajoute la nouvelle playlist au tableau des playlists
-			setPlaylistName(""); // Réinitialise les champs de saisie
+			setPlaylists((prevPlaylists) => [...prevPlaylists, response.data]);
+			setPlaylistName("");
 			setPlaylistDescription("");
-			setError(null); // Réinitialise les erreurs
+			setError(null);
 		} catch (error) {
 			console.error("Error creating playlist:", error);
 			setError("Error creating playlist");
@@ -71,11 +73,15 @@ const CreatePlaylist = ({ token }) => {
 				onChange={(e) => setPlaylistDescription(e.target.value)}
 			/>
 			<button onClick={handleCreatePlaylist}>Create Playlist</button>
+
 			<h3>Created Playlists</h3>
 			<ul>
 				{playlists.map((playlist) => (
 					<li key={playlist.id}>
 						<strong>{playlist.name}</strong> - {playlist.description}
+						<button onClick={() => navigate(`/playlists/${playlist.id}`)}>
+							View Details
+						</button>
 					</li>
 				))}
 			</ul>

@@ -8,6 +8,7 @@ import {
 	useNavigate,
 } from "react-router-dom";
 import CreatePlaylist from "./playlist";
+import PlaylistDetails from "./playlistDetails";
 import Home from "./home";
 
 const CLIENT_SECRET = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
@@ -77,6 +78,10 @@ const App = () => {
 				<Route
 					path="/create-playlist"
 					element={<CreatePlaylist token={token} userId={userId} />}
+				/>
+				<Route
+					path="/playlists/:playlistId"
+					element={<PlaylistDetails token={token} userId={userId} />}
 				/>
 			</Routes>
 		</div>
