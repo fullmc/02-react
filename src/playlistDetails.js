@@ -8,6 +8,8 @@ const PlaylistDetails = ({ token }) => {
 	const [tracks, setTracks] = useState([]);
 	const [error, setError] = useState(null);
 	const [trackUri, setTrackUri] = useState("");
+	const [newPlaylistName, setNewPlaylistName] = useState("");
+	const [isEditingName, setIsEditingName] = useState(false);
 
 	useEffect(() => {
 		const fetchPlaylistDetails = async () => {
@@ -22,6 +24,7 @@ const PlaylistDetails = ({ token }) => {
 				);
 				setPlaylist(response.data);
 				setTracks(response.data.tracks.items);
+				setNewPlaylistName(response.data.name);
 			} catch (error) {
 				console.error("Error fetching playlist details:", error);
 				setError("Error fetching playlist details");
@@ -68,6 +71,7 @@ const PlaylistDetails = ({ token }) => {
 			setPlaylist(response.data);
 			setTracks(response.data.tracks.items);
 			setTrackUri("");
+			setError(null);
 		} catch (error) {
 			console.error("Error adding track to playlist:", error);
 			setError("Error adding track to playlist");
@@ -85,6 +89,7 @@ const PlaylistDetails = ({ token }) => {
 					"Content-Type": "application/json",
 				},
 			});
+
 			const response = await axios.get(
 				`https://api.spotify.com/v1/playlists/${id}`,
 				{
@@ -95,9 +100,36 @@ const PlaylistDetails = ({ token }) => {
 			);
 			setPlaylist(response.data);
 			setTracks(response.data.tracks.items);
+			setError(null);
 		} catch (error) {
 			console.error("Error deleting track from playlist:", error);
 			setError("Error deleting track from playlist");
+		}
+	};
+
+	const handleUpdatePlaylistName = async () => {
+		try {
+			await axios.put(
+				`https://api.spotify.com/v1/playlists/${id}`,
+				{
+					name: newPlaylistName,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+				}
+			);
+			setPlaylist((prevPlaylist) => ({
+				...prevPlaylist,
+				name: newPlaylistName,
+			}));
+			setIsEditingName(false);
+			setError(null); // Clear any previous errors
+		} catch (error) {
+			console.error("Error updating playlist name:", error);
+			setError("Error updating playlist name");
 		}
 	};
 
@@ -107,6 +139,19 @@ const PlaylistDetails = ({ token }) => {
 			{playlist ? (
 				<div>
 					<h2>{playlist.name}</h2>
+					{isEditingName ? (
+						<div>
+							<input
+								type="text"
+								value={newPlaylistName}
+								onChange={(e) => setNewPlaylistName(e.target.value)}
+								placeholder="New Playlist Name"
+							/>
+							<button onClick={handleUpdatePlaylistName}>Save</button>
+						</div>
+					) : (
+						<button onClick={() => setIsEditingName(true)}>Update Name</button>
+					)}
 					<p>{playlist.description}</p>
 					<ul>
 						{tracks.map((track) => (
