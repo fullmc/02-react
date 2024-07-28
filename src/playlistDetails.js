@@ -69,6 +69,33 @@ const PlaylistDetails = ({ token }) => {
 		}
 	};
 
+	const handleDeleteTrackFromPlaylist = async (trackUri) => {
+		try {
+			await axios.delete(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
+				data: {
+					tracks: [{ uri: trackUri }],
+				},
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
+			const response = await axios.get(
+				`https://api.spotify.com/v1/playlists/${id}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			setPlaylist(response.data);
+			setTracks(response.data.tracks.items);
+		} catch (error) {
+			console.error("Error deleting track from playlist:", error);
+			setError("Error deleting track from playlist");
+		}
+	};
+
 	return (
 		<div>
 			{error && <p style={{ color: "red" }}>{error}</p>}
@@ -81,6 +108,12 @@ const PlaylistDetails = ({ token }) => {
 							<li key={track.track.id}>
 								{track.track.name} by{" "}
 								{track.track.artists.map((artist) => artist.name).join(", ")}
+								<button
+									onClick={() =>
+										handleDeleteTrackFromPlaylist(track.track.uri)
+									}>
+									Delete
+								</button>
 							</li>
 						))}
 					</ul>
