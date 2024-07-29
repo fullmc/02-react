@@ -128,7 +128,7 @@ const PlaylistDetails = ({ token }) => {
 				name: newPlaylistName,
 			}));
 			setIsEditingName(false);
-			setError(null); // Clear any previous errors
+			setError(null);
 		} catch (error) {
 			console.error("Error updating playlist name:", error);
 			setError("Error updating playlist name");
@@ -154,10 +154,54 @@ const PlaylistDetails = ({ token }) => {
 				description: newPlaylistDescription,
 			}));
 			setIsEditingDescription(false);
-			setError(null); // Clear any previous errors
+			setError(null);
 		} catch (error) {
 			console.error("Error updating playlist description:", error);
 			setError("Error updating playlist description");
+		}
+	};
+
+	const handleOrderTrack = async (startIndex, direction) => {
+		let endIndex;
+		if (direction === "up") {
+			endIndex = startIndex - 1;
+		} else if (direction === "down") {
+			endIndex = startIndex + 2;
+		}
+
+		if (endIndex < 0 || endIndex > tracks.length) {
+			setError("Invalid track position");
+			return;
+		}
+
+		try {
+			await axios.put(
+				`https://api.spotify.com/v1/playlists/${id}/tracks`,
+				{
+					range_start: startIndex,
+					insert_before: endIndex,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+				}
+			);
+			const response = await axios.get(
+				`https://api.spotify.com/v1/playlists/${id}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			setPlaylist(response.data);
+			setTracks(response.data.tracks.items);
+			setError(null);
+		} catch (error) {
+			console.error("Error reordering track in playlist:", error);
+			setError("Error reordering track in playlist");
 		}
 	};
 
@@ -197,7 +241,7 @@ const PlaylistDetails = ({ token }) => {
 						</button>
 					)}
 					<ul>
-						{tracks.map((track) => (
+						{tracks.map((track, index) => (
 							<li key={track.track.id}>
 								{track.track.name} by{" "}
 								{track.track.artists.map((artist) => artist.name).join(", ")}
@@ -206,6 +250,16 @@ const PlaylistDetails = ({ token }) => {
 										handleDeleteTrackFromPlaylist(track.track.uri)
 									}>
 									Delete
+								</button>
+								<button
+									onClick={() => handleOrderTrack(index, "up")}
+									disabled={index === 0}>
+									Up
+								</button>
+								<button
+									onClick={() => handleOrderTrack(index, "down")}
+									disabled={index === tracks.length - 1}>
+									Down
 								</button>
 							</li>
 						))}
