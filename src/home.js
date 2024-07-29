@@ -10,6 +10,10 @@ const Home = ({ handleLogin, token, navigate }) => {
 	});
 	const [error, setError] = useState(null);
 	const [selectedType, setSelectedType] = useState("all");
+	const [selectedTrack, setSelectedTrack] = useState(null);
+	const [playlists, setPlaylists] = useState([
+		{ id: 1, name: "My Playlist", tracks: [] },
+	]);
 
 	const handleSearch = async () => {
 		if (!searchQuery.trim()) {
@@ -54,6 +58,32 @@ const Home = ({ handleLogin, token, navigate }) => {
 			console.error("Error performing search:", error);
 			setError("Error performing search");
 		}
+	};
+
+	const handleAddTrackToPlaylist = (playlistId, track) => {
+		setPlaylists((prevPlaylists) =>
+			prevPlaylists.map((playlist) =>
+				playlist.id === playlistId
+					? {
+							...playlist,
+							tracks: [...playlist.tracks, track],
+					  }
+					: playlist
+			)
+		);
+	};
+
+	const handleRemoveTrackFromPlaylist = (playlistId, trackId) => {
+		setPlaylists((prevPlaylists) =>
+			prevPlaylists.map((playlist) =>
+				playlist.id === playlistId
+					? {
+							...playlist,
+							tracks: playlist.tracks.filter((track) => track.id !== trackId),
+					  }
+					: playlist
+			)
+		);
 	};
 
 	const filteredResults = () => {
@@ -113,6 +143,9 @@ const Home = ({ handleLogin, token, navigate }) => {
 											<li key={track.id}>
 												{track.name} by{" "}
 												{track.artists.map((artist) => artist.name).join(", ")}
+												<button onClick={() => setSelectedTrack(track)}>
+													Select
+												</button>
 											</li>
 										))}
 									</ul>
@@ -141,6 +174,51 @@ const Home = ({ handleLogin, token, navigate }) => {
 									</ul>
 								</div>
 							)}
+						</div>
+						{selectedTrack && (
+							<div>
+								<h3>Selected Track</h3>
+								<p>{selectedTrack.name}</p>
+								<p>
+									{selectedTrack.artists
+										.map((artist) => artist.name)
+										.join(", ")}
+								</p>
+								<div>
+									<h4>Add to Playlist</h4>
+									{playlists.map((playlist) => (
+										<button
+											key={playlist.id}
+											onClick={() =>
+												handleAddTrackToPlaylist(playlist.id, selectedTrack)
+											}>
+											{playlist.name}
+										</button>
+									))}
+								</div>
+							</div>
+						)}
+						<div>
+							<h3>My Playlists</h3>
+							{playlists.map((playlist) => (
+								<div key={playlist.id}>
+									<h4>{playlist.name}</h4>
+									<ul>
+										{playlist.tracks.map((track) => (
+											<li key={track.id}>
+												{track.name} by{" "}
+												{track.artists.map((artist) => artist.name).join(", ")}
+												<button
+													onClick={() =>
+														handleRemoveTrackFromPlaylist(playlist.id, track.id)
+													}>
+													Remove
+												</button>
+											</li>
+										))}
+									</ul>
+								</div>
+							))}
 						</div>
 					</div>
 				)}
