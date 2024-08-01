@@ -9,6 +9,7 @@ const CreatePlaylist = ({ token }) => {
 	const [playlistDescription, setPlaylistDescription] = useState("");
 	const [error, setError] = useState(null);
 	const [playlists, setPlaylists] = useState([]);
+	const [selectedPlaylists, setSelectedPlaylists] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [searchResults, setSearchResults] = useState({
 		tracks: [],
@@ -162,6 +163,43 @@ const CreatePlaylist = ({ token }) => {
 		);
 	};
 
+	const handleSelectPlaylist = (playlistId) => {
+		setSelectedPlaylists((prevSelected) => {
+			if (prevSelected.includes(playlistId)) {
+				return prevSelected.filter((id) => id !== playlistId);
+			} else {
+				return [...prevSelected, playlistId];
+			}
+		});
+	};
+
+	const handleDeleteSelectedPlaylists = async () => {
+		try {
+			await Promise.all(
+				selectedPlaylists.map((playlistId) =>
+					axios.delete(
+						`https://api.spotify.com/v1/playlists/${playlistId}/followers`,
+						{
+							headers: {
+								Authorization: `Bearer ${token}`,
+							},
+						}
+					)
+				)
+			);
+			setPlaylists((prevPlaylists) =>
+				prevPlaylists.filter(
+					(playlist) => !selectedPlaylists.includes(playlist.id)
+				)
+			);
+			setSelectedPlaylists([]);
+			setError(null);
+		} catch (error) {
+			console.error("Error deleting playlists:", error);
+			setError("Error deleting playlists");
+		}
+	};
+
 	const filteredResults = () => {
 		switch (selectedType) {
 			case "track":
@@ -178,6 +216,24 @@ const CreatePlaylist = ({ token }) => {
 					artists: searchResults.artists || [],
 				};
 		}
+	};
+
+	const exportPlaylistsAsJson = () => {
+		const playlistsToExport =
+			selectedPlaylists.length > 0
+				? playlists.filter((playlist) =>
+						selectedPlaylists.includes(playlist.id)
+				  )
+				: playlists;
+		const json = JSON.stringify(playlistsToExport, null, 2);
+		const blob = new Blob([json], { type: "application/json" });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.href = url;
+		link.download = "playlists.json";
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
 	};
 
 	return (
@@ -199,16 +255,24 @@ const CreatePlaylist = ({ token }) => {
 			<button onClick={handleCreatePlaylist}>Create Playlist</button>
 
 			<h3>Created Playlists</h3>
-			<div>
+			<button
+				onClick={handleDeleteSelectedPlaylists}
+				disabled={selectedPlaylists.length === 0}>
+				Delete Selected
+			</button>
+			<button onClick={exportPlaylistsAsJson}>Export as JSON</button>
+			<ul>
 				{playlists.map((playlist) => (
 					<div key={playlist.id}>
-						<div className="playlist_details">
-							<h4>{playlist.name}</h4>
-							<button onClick={() => navigate(`/playlists/${playlist.id}`)}>
-								View details
-							</button>
-						</div>
-						<p>{playlist.description}</p>
+						<input
+							type="checkbox"
+							checked={selectedPlaylists.includes(playlist.id)}
+							onChange={() => handleSelectPlaylist(playlist.id)}
+						/>
+						<strong>{playlist.name}</strong> - {playlist.description}
+						<button onClick={() => navigate(`/playlists/${playlist.id}`)}>
+							View details
+						</button>
 						<ul>
 							{Array.isArray(playlist.tracks) &&
 								playlist.tracks.map((track) => (
@@ -226,23 +290,24 @@ const CreatePlaylist = ({ token }) => {
 						</ul>
 					</div>
 				))}
+			</ul>
+
+			<div>
+				<input
+					type="search"
+					placeholder="Search for tracks, albums, artists..."
+					value={searchQuery}
+					onChange={(e) => setSearchQuery(e.target.value)}
+				/>
+				<button onClick={handleSearch}>Search</button>
 			</div>
-
-			<h3>Search</h3>
-			<input
-				type="search"
-				placeholder="Search for tracks, albums, artists..."
-				value={searchQuery}
-				onChange={(e) => setSearchQuery(e.target.value)}
-			/>
-			<button onClick={handleSearch}>Search</button>
-
 			<div>
 				<button onClick={() => setSelectedType("track")}>Tracks</button>
 				<button onClick={() => setSelectedType("album")}>Albums</button>
 				<button onClick={() => setSelectedType("artist")}>Artists</button>
 				<button onClick={() => setSelectedType("all")}>All</button>
 			</div>
+			{error && <p style={{ color: "red" }}>{error}</p>}
 
 			<h3>Search Results</h3>
 			{(selectedType === "track" || selectedType === "all") && (
