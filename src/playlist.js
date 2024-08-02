@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./playlist.css";
@@ -20,6 +20,7 @@ const CreatePlaylist = ({ token }) => {
 	const [selectedTrack, setSelectedTrack] = useState(null);
 	const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
 	const navigate = useNavigate();
+	const fileInputRef = useRef(null);
 
 	useEffect(() => {
 		if (token) {
@@ -300,6 +301,12 @@ const CreatePlaylist = ({ token }) => {
 		}
 	};
 
+	const handleImportButtonClick = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
+		}
+	};
+
 	return (
 		<div className="create-playlist">
 			{error && <p style={{ color: "red" }}>{error}</p>}
@@ -321,111 +328,131 @@ const CreatePlaylist = ({ token }) => {
 					<button onClick={() => setSelectedType("all")}>All</button>
 				</div>
 			</div>
-			<button onClick={() => setShowCreatePlaylist(!showCreatePlaylist)}>
-				{showCreatePlaylist ? "Hide Create Playlist" : "Create a Playlist"}
-			</button>
+			<div className="main">
+				<button
+					className="create"
+					onClick={() => setShowCreatePlaylist(!showCreatePlaylist)}>
+					{showCreatePlaylist ? "Back" : "Create a Playlist"}
+				</button>
 
-			{showCreatePlaylist && (
-				<>
-					<input
-						type="text"
-						placeholder="Playlist Name"
-						value={playlistName}
-						onChange={(e) => setPlaylistName(e.target.value)}
-					/>
-					<input
-						type="text"
-						placeholder="Playlist Description"
-						value={playlistDescription}
-						onChange={(e) => setPlaylistDescription(e.target.value)}
-					/>
-					<button onClick={handleCreatePlaylist}>Create Playlist</button>
-				</>
-			)}
+				{showCreatePlaylist && (
+					<>
+						<div class="input-create">
+							<input
+								type="text"
+								placeholder="Name"
+								value={playlistName}
+								onChange={(e) => setPlaylistName(e.target.value)}
+							/>
+							<input
+								type="text"
+								placeholder="Description"
+								value={playlistDescription}
+								onChange={(e) => setPlaylistDescription(e.target.value)}
+							/>
+							<button onClick={handleCreatePlaylist}>Create</button>
+						</div>
+					</>
+				)}
 
-			<h3>Created Playlists</h3>
-			<button
-				onClick={handleDeleteSelectedPlaylists}
-				disabled={selectedPlaylists.length === 0}>
-				Delete Selected
-			</button>
-			<button onClick={exportPlaylistsAsJson}>Export as JSON</button>
-			<input
-				type="file"
-				accept="application/json"
-				onChange={importPlaylistsFromJson}
-			/>
-			<ul>
-				{playlists.map((playlist) => (
-					<div key={playlist.id}>
-						<input
-							type="checkbox"
-							checked={selectedPlaylists.includes(playlist.id)}
-							onChange={() => handleSelectPlaylist(playlist.id)}
-						/>
-						<strong>{playlist.name}</strong> - {playlist.description}
-						<button onClick={() => navigate(`/playlists/${playlist.id}`)}>
-							View details
+				<div className="results-header">
+					<h3>Created Playlists</h3>
+					<div class="buttons-action">
+						<button
+							className="delete"
+							onClick={handleDeleteSelectedPlaylists}
+							disabled={selectedPlaylists.length === 0}>
+							Delete Selected
 						</button>
-						<ul>
-							{Array.isArray(playlist.tracks) &&
-								playlist.tracks.map((track) => (
-									<li key={track.id}>
-										{track.name} by{" "}
-										{track.artists.map((artist) => artist.name).join(", ")}
-										<button
-											onClick={() =>
-												handleRemoveTrackFromPlaylist(playlist.id, track.id)
-											}>
-											Remove
-										</button>
-									</li>
-								))}
-						</ul>
+						<button onClick={exportPlaylistsAsJson}>Export as JSON</button>
+						<button onClick={handleImportButtonClick}>Import</button>
+						<input
+							type="file"
+							accept="application/json"
+							onChange={importPlaylistsFromJson}
+							ref={fileInputRef}
+							style={{ display: "none" }}
+						/>
 					</div>
-				))}
-			</ul>
+				</div>
+
+				<ul>
+					{playlists.map((playlist) => (
+						<div key={playlist.id}>
+							<input
+								type="checkbox"
+								checked={selectedPlaylists.includes(playlist.id)}
+								onChange={() => handleSelectPlaylist(playlist.id)}
+							/>
+							<strong>{playlist.name}</strong> - {playlist.description}
+							<button onClick={() => navigate(`/playlists/${playlist.id}`)}>
+								View details
+							</button>
+							<ul>
+								{Array.isArray(playlist.tracks) &&
+									playlist.tracks.map((track) => (
+										<li key={track.id}>
+											{track.name} by{" "}
+											{track.artists.map((artist) => artist.name).join(", ")}
+											<button
+												onClick={() =>
+													handleRemoveTrackFromPlaylist(playlist.id, track.id)
+												}>
+												Remove
+											</button>
+										</li>
+									))}
+							</ul>
+						</div>
+					))}
+				</ul>
+			</div>
 
 			{error && <p style={{ color: "red" }}>{error}</p>}
 
-			<h3>Search Results</h3>
-			{(selectedType === "track" || selectedType === "all") && (
-				<div>
-					<h4>Tracks</h4>
-					<ul>
+			<h2>Search Results</h2>
+			<div>
+				{(selectedType === "track" || selectedType === "all") && (
+					<div className="track-list">
+						<h3>Tracks</h3>
+
 						{(searchResults.tracks || []).map((track) => (
-							<li key={track.id}>
+							<p key={track.id}>
 								{track.name} by{" "}
 								{track.artists.map((artist) => artist.name).join(", ")}
-								<button onClick={() => setSelectedTrack(track)}>Select</button>
-							</li>
+								<button
+									className="select-button"
+									onClick={() => setSelectedTrack(track)}>
+									Select
+								</button>
+							</p>
 						))}
-					</ul>
-				</div>
-			)}
-			{(selectedType === "album" || selectedType === "all") && (
-				<div>
-					<h4>Albums</h4>
-					<ul>
-						{(searchResults.albums || []).map((album) => (
-							<li key={album.id}>
-								{album.name} by{" "}
-								{album.artists.map((artist) => artist.name).join(", ")}
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
-			{(selectedType === "artist" || selectedType === "all") && (
-				<div>
-					<h4>Artists</h4>
-					<ul>
-						{(searchResults.artists || []).map((artist) => (
-							<li key={artist.id}>{artist.name}</li>
-						))}
-					</ul>
-				</div>
-			)}
+					</div>
+				)}
+				{(selectedType === "album" || selectedType === "all") && (
+					<div>
+						<h4>Albums</h4>
+						<ul>
+							{(searchResults.albums || []).map((album) => (
+								<li key={album.id}>
+									{album.name} by{" "}
+									{album.artists.map((artist) => artist.name).join(", ")}
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
+				{(selectedType === "artist" || selectedType === "all") && (
+					<div>
+						<h4>Artists</h4>
+						<ul>
+							{(searchResults.artists || []).map((artist) => (
+								<li key={artist.id}>{artist.name}</li>
+							))}
+						</ul>
+					</div>
+				)}
+			</div>
 
 			{selectedTrack && (
 				<div>

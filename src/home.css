@@ -8,6 +8,11 @@
 	src: url("fonts/AvenirNextCyr-Bold.woff2") format("woff2"),
 		url("fonts/AvenirNextCyr-Bold.ttf") format("truetype");
 }
+@font-face {
+	font-family: "AvenirMedium";
+	src: url("fonts/AvenirNextCyr-Medium.woff2") format("woff2"),
+		url("fonts/AvenirNextCyr-Medium.ttf") format("truetype");
+}
 body {
 	background-color: #121212;
 	font-family: "AvenirRegular", sans-serif;
@@ -33,6 +38,6 @@ button {
 }
 
 button:hover {
-	background-color: #1ed760; /* Change la couleur de fond en vert */
+	background-color: #777777; /* Change la couleur de fond en vert */
 	transform: scale(1.1); /* Agrandit le bouton légèrement */
 }
