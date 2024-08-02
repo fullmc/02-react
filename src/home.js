@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./home.css";
 
 const Home = ({ handleLogin, token, navigate }) => {
 	return (

@@ -18,6 +18,7 @@ const CreatePlaylist = ({ token }) => {
 	});
 	const [selectedType, setSelectedType] = useState("all");
 	const [selectedTrack, setSelectedTrack] = useState(null);
+	const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -301,21 +302,46 @@ const CreatePlaylist = ({ token }) => {
 
 	return (
 		<div className="create-playlist">
-			<h2>Create Playlist</h2>
 			{error && <p style={{ color: "red" }}>{error}</p>}
-			<input
-				type="text"
-				placeholder="Playlist Name"
-				value={playlistName}
-				onChange={(e) => setPlaylistName(e.target.value)}
-			/>
-			<input
-				type="text"
-				placeholder="Playlist Description"
-				value={playlistDescription}
-				onChange={(e) => setPlaylistDescription(e.target.value)}
-			/>
-			<button onClick={handleCreatePlaylist}>Create Playlist</button>
+			{/* searchbar */}
+			<div className="search">
+				<div className="searchbar">
+					<input
+						type="search"
+						placeholder="Search for tracks, albums, artists..."
+						value={searchQuery}
+						onChange={(e) => setSearchQuery(e.target.value)}
+					/>
+					<button onClick={handleSearch}>Search</button>
+				</div>
+				<div className="filters">
+					<button onClick={() => setSelectedType("track")}>Tracks</button>
+					<button onClick={() => setSelectedType("album")}>Albums</button>
+					<button onClick={() => setSelectedType("artist")}>Artists</button>
+					<button onClick={() => setSelectedType("all")}>All</button>
+				</div>
+			</div>
+			<button onClick={() => setShowCreatePlaylist(!showCreatePlaylist)}>
+				{showCreatePlaylist ? "Hide Create Playlist" : "Create a Playlist"}
+			</button>
+
+			{showCreatePlaylist && (
+				<>
+					<input
+						type="text"
+						placeholder="Playlist Name"
+						value={playlistName}
+						onChange={(e) => setPlaylistName(e.target.value)}
+					/>
+					<input
+						type="text"
+						placeholder="Playlist Description"
+						value={playlistDescription}
+						onChange={(e) => setPlaylistDescription(e.target.value)}
+					/>
+					<button onClick={handleCreatePlaylist}>Create Playlist</button>
+				</>
+			)}
 
 			<h3>Created Playlists</h3>
 			<button
@@ -360,21 +386,6 @@ const CreatePlaylist = ({ token }) => {
 				))}
 			</ul>
 
-			<div>
-				<input
-					type="search"
-					placeholder="Search for tracks, albums, artists..."
-					value={searchQuery}
-					onChange={(e) => setSearchQuery(e.target.value)}
-				/>
-				<button onClick={handleSearch}>Search</button>
-			</div>
-			<div>
-				<button onClick={() => setSelectedType("track")}>Tracks</button>
-				<button onClick={() => setSelectedType("album")}>Albums</button>
-				<button onClick={() => setSelectedType("artist")}>Artists</button>
-				<button onClick={() => setSelectedType("all")}>All</button>
-			</div>
 			{error && <p style={{ color: "red" }}>{error}</p>}
 
 			<h3>Search Results</h3>

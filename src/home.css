@@ -1,0 +1,38 @@
+@font-face {
+	font-family: "AvenirRegular";
+	src: url("fonts/AvenirNextCyr-Regular.woff2") format("woff2"),
+		url("fonts/AvenirNextCyr-Regular.ttf") format("truetype");
+}
+@font-face {
+	font-family: "AvenirBold";
+	src: url("fonts/AvenirNextCyr-Bold.woff2") format("woff2"),
+		url("fonts/AvenirNextCyr-Bold.ttf") format("truetype");
+}
+body {
+	background-color: #121212;
+	font-family: "AvenirRegular", sans-serif;
+	color: #ffffff;
+	margin: 30px 40px 0 40px;
+}
+
+h1 {
+	font-family: "AvenirBold", sans-serif;
+}
+
+button {
+	font-family: "AvenirRegular", sans-serif;
+	background-color: #777777;
+	border: none;
+	padding: 16px 20px;
+	border-radius: 50px;
+	cursor: pointer;
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 16px;
+	transition: background-color 0.3s ease, transform 0.3s ease; /* Ajoute une transition pour les changements de couleur et de taille */
+}
+
+button:hover {
+	background-color: #1ed760; /* Change la couleur de fond en vert */
+	transform: scale(1.1); /* Agrandit le bouton légèrement */
+}
