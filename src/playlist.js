@@ -236,20 +236,63 @@ const CreatePlaylist = ({ token }) => {
 		document.body.removeChild(link);
 	};
 
-	const importPlaylistsFromJson = (event) => {
+	const importPlaylistsFromJson = async (event) => {
 		const file = event.target.files[0];
 		if (file) {
 			const reader = new FileReader();
-			reader.onload = (e) => {
+			reader.onload = async (e) => {
 				try {
 					const importedPlaylists = JSON.parse(e.target.result);
-					setPlaylists((prevPlaylists) => [
-						...prevPlaylists,
-						...importedPlaylists,
-					]);
+
+					for (const importedPlaylist of importedPlaylists) {
+						// Creates a new playlist on Spotify
+						const createPlaylistResponse = await axios.post(
+							`https://api.spotify.com/v1/users/${userId}/playlists`,
+							{
+								name: importedPlaylist.name,
+								description: importedPlaylist.description,
+								public: false,
+							},
+							{
+								headers: {
+									Authorization: `Bearer ${token}`,
+									"Content-Type": "application/json",
+								},
+							}
+						);
+
+						const newPlaylist = {
+							...createPlaylistResponse.data,
+							tracks: importedPlaylist.tracks,
+						};
+
+						// Add tracks to the new playlist
+						if (importedPlaylist.tracks && importedPlaylist.tracks.length > 0) {
+							const trackUris = importedPlaylist.tracks.map(
+								(track) => track.uri
+							);
+
+							await axios.post(
+								`https://api.spotify.com/v1/playlists/${newPlaylist.id}/tracks`,
+								{
+									uris: trackUris,
+								},
+								{
+									headers: {
+										Authorization: `Bearer ${token}`,
+										"Content-Type": "application/json",
+									},
+								}
+							);
+						}
+
+						// Updates the local state with the new playlist
+						setPlaylists((prevPlaylists) => [...prevPlaylists, newPlaylist]);
+					}
+					setError(null);
 				} catch (error) {
-					console.error("Error parsing JSON file:", error);
-					setError("Error parsing JSON file");
+					console.error("Error importing playlists:", error);
+					setError("Error importing playlists");
 				}
 			};
 			reader.readAsText(file);
