@@ -236,6 +236,26 @@ const CreatePlaylist = ({ token }) => {
 		document.body.removeChild(link);
 	};
 
+	const importPlaylistsFromJson = (event) => {
+		const file = event.target.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				try {
+					const importedPlaylists = JSON.parse(e.target.result);
+					setPlaylists((prevPlaylists) => [
+						...prevPlaylists,
+						...importedPlaylists,
+					]);
+				} catch (error) {
+					console.error("Error parsing JSON file:", error);
+					setError("Error parsing JSON file");
+				}
+			};
+			reader.readAsText(file);
+		}
+	};
+
 	return (
 		<div className="create-playlist">
 			<h2>Create Playlist</h2>
@@ -261,6 +281,11 @@ const CreatePlaylist = ({ token }) => {
 				Delete Selected
 			</button>
 			<button onClick={exportPlaylistsAsJson}>Export as JSON</button>
+			<input
+				type="file"
+				accept="application/json"
+				onChange={importPlaylistsFromJson}
+			/>
 			<ul>
 				{playlists.map((playlist) => (
 					<div key={playlist.id}>
