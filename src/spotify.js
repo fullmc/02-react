@@ -2,7 +2,7 @@ import axios from "axios";
 
 const CLIENT_ID = "062547a6c9264cf69181995c1176e18f";
 const CLIENT_SECRET = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
-const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+const REDIRECT_URI = "https://localhost:3000";
 
 const getToken = async (code) => {
 	try {
