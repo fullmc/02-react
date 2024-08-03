@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./playlist.css";
+import { ReactComponent as CloseIcon } from "./assets/Vector.svg";
 
 const CreatePlaylist = ({ token }) => {
 	const [userId, setUserId] = useState("");
@@ -322,6 +323,7 @@ const CreatePlaylist = ({ token }) => {
 					<button onClick={handleSearch}>Search</button>
 				</div>
 				<div className="filters">
+					<p>Filters</p>
 					<button onClick={() => setSelectedType("track")}>Tracks</button>
 					<button onClick={() => setSelectedType("album")}>Albums</button>
 					<button onClick={() => setSelectedType("artist")}>Artists</button>
@@ -356,7 +358,7 @@ const CreatePlaylist = ({ token }) => {
 				)}
 
 				<div className="results-header">
-					<h3>Created Playlists</h3>
+					<h3>Playlists</h3>
 					<div class="buttons-action">
 						<button
 							className="delete"
@@ -376,7 +378,7 @@ const CreatePlaylist = ({ token }) => {
 					</div>
 				</div>
 
-				<ul>
+				<ul className="created-playlists">
 					{playlists.map((playlist) => (
 						<div key={playlist.id}>
 							<input
@@ -385,21 +387,23 @@ const CreatePlaylist = ({ token }) => {
 								onChange={() => handleSelectPlaylist(playlist.id)}
 							/>
 							<strong>{playlist.name}</strong> - {playlist.description}
-							<button onClick={() => navigate(`/playlists/${playlist.id}`)}>
+							<button
+								className="button-details"
+								onClick={() => navigate(`/playlists/${playlist.id}`)}>
 								View details
 							</button>
 							<ul>
 								{Array.isArray(playlist.tracks) &&
 									playlist.tracks.map((track) => (
-										<li key={track.id}>
-											{track.name} by{" "}
+										<li className="playlist-tracks" key={track.id}>
+											{track.name} -{" "}
 											{track.artists.map((artist) => artist.name).join(", ")}
-											<button
+											<CloseIcon
+												className="button-remove"
 												onClick={() =>
 													handleRemoveTrackFromPlaylist(playlist.id, track.id)
-												}>
-												Remove
-											</button>
+												}
+											/>
 										</li>
 									))}
 							</ul>
@@ -410,69 +414,70 @@ const CreatePlaylist = ({ token }) => {
 
 			{error && <p style={{ color: "red" }}>{error}</p>}
 
-			<h2>Search Results</h2>
-			<div>
-				{(selectedType === "track" || selectedType === "all") && (
-					<div className="track-list">
-						<h3>Tracks</h3>
-
-						{(searchResults.tracks || []).map((track) => (
-							<p key={track.id}>
-								{track.name} by{" "}
-								{track.artists.map((artist) => artist.name).join(", ")}
-								<button
-									className="select-button"
-									onClick={() => setSelectedTrack(track)}>
-									Select
-								</button>
-							</p>
-						))}
-					</div>
-				)}
-				{(selectedType === "album" || selectedType === "all") && (
-					<div>
-						<h4>Albums</h4>
-						<ul>
+			{/* <h2>Search Results</h2> */}
+			<div className="section">
+				<div className="results">
+					{(selectedType === "track" || selectedType === "all") && (
+						<div>
+							<h3>Tracks</h3>
+							{(searchResults.tracks || []).map((track) => (
+								<div className="track-list">
+									<p key={track.id}>
+										{track.name} -{" "}
+										{track.artists.map((artist) => artist.name).join(", ")}
+										<button
+											className="select-button"
+											onClick={() => setSelectedTrack(track)}>
+											Select
+										</button>
+									</p>
+								</div>
+							))}
+						</div>
+					)}
+					{(selectedType === "album" || selectedType === "all") && (
+						<div>
+							<h3>Albums</h3>
 							{(searchResults.albums || []).map((album) => (
-								<li key={album.id}>
-									{album.name} by{" "}
+								<p key={album.id}>
+									{album.name} -{" "}
 									{album.artists.map((artist) => artist.name).join(", ")}
-								</li>
+								</p>
 							))}
-						</ul>
-					</div>
-				)}
-				{(selectedType === "artist" || selectedType === "all") && (
-					<div>
-						<h4>Artists</h4>
-						<ul>
+						</div>
+					)}
+					{(selectedType === "artist" || selectedType === "all") && (
+						<div>
+							<h3>Artists</h3>
 							{(searchResults.artists || []).map((artist) => (
-								<li key={artist.id}>{artist.name}</li>
+								<p key={artist.id}>{artist.name}</p>
 							))}
-						</ul>
-					</div>
-				)}
-			</div>
-
-			{selectedTrack && (
-				<div>
-					<h3>Selected Track</h3>
-					<p>{selectedTrack.name}</p>
-					<p>{selectedTrack.artists.map((artist) => artist.name).join(", ")}</p>
-					<div>
-						<h4>Add to Playlist</h4>
-						{playlists.map((playlist) => (
-							<button
-								key={playlist.id}
-								onClick={() =>
-									handleAddTrackToPlaylist(playlist.id, selectedTrack)
-								}>
-								{playlist.name}
-							</button>
-						))}
-					</div>
+						</div>
+					)}
 				</div>
-			)}
+				<div>
+					{selectedTrack && (
+						<div>
+							<h3>Selected Track</h3>
+							<p>
+								{selectedTrack.name} -{" "}
+								{selectedTrack.artists.map((artist) => artist.name).join(", ")}
+							</p>
+							<div className="button-add">
+								{playlists.map((playlist) => (
+									<button
+										key={playlist.id}
+										onClick={() =>
+											handleAddTrackToPlaylist(playlist.id, selectedTrack)
+										}>
+										{"Add to " + playlist.name}
+									</button>
+								))}
+							</div>
+						</div>
+					)}
+				</div>
+			</div>
 		</div>
 	);
 };

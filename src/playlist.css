@@ -24,9 +24,23 @@ input[type="search"] {
 	width: 80vw;
 	height: 42px;
 	padding-left: 18px;
+	padding-right: 18px;
 	font-size: 14px;
 	border-radius: 20px;
 	color: #ffffff;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+	-webkit-appearance: none;
+	height: 16px;
+	width: 12px;
+	background: url("./assets/Vector.svg") no-repeat center center;
+	background-size: contain;
+	cursor: pointer;
+}
+
+input[type="search"]::-webkit-search-decoration {
+	-webkit-appearance: none;
 }
 
 input[type="text"] {
@@ -104,4 +118,57 @@ input[type="text"] {
 			cursor: not-allowed;
 		}
 	}
+}
+
+.section {
+	display: flex;
+	align-items: flex-start;
+	gap: 20%;
+
+	.results {
+		h3 {
+			font-family: "AvenirMedium", sans-serif;
+		}
+
+		.track-list p {
+			display: flex;
+			align-items: center;
+			gap: 18px;
+		}
+
+		.select-button,
+		.button-details {
+			width: 6em;
+			height: 28px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+}
+
+.button-add {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.button-remove {
+	width: 12px;
+	height: 10px;
+	align-self: center;
+	cursor: pointer;
+	fill: #ffffff; /* Change this to the color you want */
+}
+
+.playlist-tracks {
+	display: flex;
+	align-items: center;
+	justify-items: center;
+}
+
+.created-playlists {
+	display: flex;
+	flex-direction: column;
+	gap: 42px;
 }
