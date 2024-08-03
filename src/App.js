@@ -7,7 +7,7 @@ import {
 	Route,
 	useNavigate,
 } from "react-router-dom";
-import CreatePlaylist from "./playlist";
+import ManagePlaylist from "./playlist";
 import PlaylistDetails from "./playlistDetails";
 import Home from "./home";
 
@@ -77,7 +77,7 @@ const App = () => {
 				/>
 				<Route
 					path="/create-playlist"
-					element={<CreatePlaylist token={token} userId={userId} />}
+					element={<ManagePlaylist token={token} userId={userId} />}
 				/>
 				<Route
 					path="/playlists/:id"

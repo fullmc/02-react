@@ -136,8 +136,7 @@ input[type="text"] {
 			gap: 18px;
 		}
 
-		.select-button,
-		.button-details {
+		.select-button {
 			width: 6em;
 			height: 28px;
 			display: flex;
@@ -155,20 +154,26 @@ input[type="text"] {
 
 .button-remove {
 	width: 12px;
-	height: 10px;
-	align-self: center;
+	height: 12px;
 	cursor: pointer;
-	fill: #ffffff; /* Change this to the color you want */
+	fill: #ffffff;
+	margin-left: 6px;
 }
-
-.playlist-tracks {
-	display: flex;
-	align-items: center;
-	justify-items: center;
-}
-
 .created-playlists {
-	display: flex;
-	flex-direction: column;
-	gap: 42px;
+	> div {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		margin-bottom: 24px;
+	}
+	.title {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	.button-details {
+		height: 24px;
+		display: flex;
+		align-items: center;
+	}
 }

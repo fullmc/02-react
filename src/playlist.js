@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./playlist.css";
 import { ReactComponent as CloseIcon } from "./assets/Vector.svg";
 
-const CreatePlaylist = ({ token }) => {
+const ManagePlaylist = ({ token }) => {
 	const [userId, setUserId] = useState("");
 	const [playlistName, setPlaylistName] = useState("");
 	const [playlistDescription, setPlaylistDescription] = useState("");
@@ -295,7 +295,7 @@ const CreatePlaylist = ({ token }) => {
 					setError(null);
 				} catch (error) {
 					console.error("Error importing playlists:", error);
-					setError("Error importing playlists");
+					setError("Error importing playlists: you may have to log in first");
 				}
 			};
 			reader.readAsText(file);
@@ -339,7 +339,7 @@ const CreatePlaylist = ({ token }) => {
 
 				{showCreatePlaylist && (
 					<>
-						<div class="input-create">
+						<div className="input-create">
 							<input
 								type="text"
 								placeholder="Name"
@@ -359,7 +359,7 @@ const CreatePlaylist = ({ token }) => {
 
 				<div className="results-header">
 					<h3>Playlists</h3>
-					<div class="buttons-action">
+					<div className="buttons-action">
 						<button
 							className="delete"
 							onClick={handleDeleteSelectedPlaylists}
@@ -381,17 +381,19 @@ const CreatePlaylist = ({ token }) => {
 				<ul className="created-playlists">
 					{playlists.map((playlist) => (
 						<div key={playlist.id}>
-							<input
-								type="checkbox"
-								checked={selectedPlaylists.includes(playlist.id)}
-								onChange={() => handleSelectPlaylist(playlist.id)}
-							/>
-							<strong>{playlist.name}</strong> - {playlist.description}
-							<button
-								className="button-details"
-								onClick={() => navigate(`/playlists/${playlist.id}`)}>
-								View details
-							</button>
+							<div className="title">
+								<input
+									type="checkbox"
+									checked={selectedPlaylists.includes(playlist.id)}
+									onChange={() => handleSelectPlaylist(playlist.id)}
+								/>
+								<strong>{playlist.name}</strong> - {playlist.description}
+								<button
+									className="button-details"
+									onClick={() => navigate(`/playlists/${playlist.id}`)}>
+									View details
+								</button>
+							</div>
 							<ul>
 								{Array.isArray(playlist.tracks) &&
 									playlist.tracks.map((track) => (
@@ -464,15 +466,19 @@ const CreatePlaylist = ({ token }) => {
 								{selectedTrack.artists.map((artist) => artist.name).join(", ")}
 							</p>
 							<div className="button-add">
-								{playlists.map((playlist) => (
-									<button
-										key={playlist.id}
-										onClick={() =>
-											handleAddTrackToPlaylist(playlist.id, selectedTrack)
-										}>
-										{"Add to " + playlist.name}
-									</button>
-								))}
+								{playlists.length === 0 ? (
+									<p>Please create or import a playlist first.</p>
+								) : (
+									playlists.map((playlist) => (
+										<button
+											key={playlist.id}
+											onClick={() =>
+												handleAddTrackToPlaylist(playlist.id, selectedTrack)
+											}>
+											{"Add to " + playlist.name}
+										</button>
+									))
+								)}
 							</div>
 						</div>
 					)}
@@ -482,4 +488,4 @@ const CreatePlaylist = ({ token }) => {
 	);
 };
 
-export default CreatePlaylist;
+export default ManagePlaylist;
