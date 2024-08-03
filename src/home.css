@@ -18,6 +18,7 @@ body {
 	font-family: "AvenirRegular", sans-serif;
 	color: #ffffff;
 	margin: 30px 40px 0 40px;
+	height: 100vh;
 }
 
 h1 {
@@ -26,7 +27,7 @@ h1 {
 
 button {
 	font-family: "AvenirRegular", sans-serif;
-	background-color: #777777;
+	background-color: #282828;
 	border: none;
 	padding: 16px 20px;
 	border-radius: 50px;
@@ -34,10 +35,10 @@ button {
 	color: #ffffff;
 	font-weight: bold;
 	font-size: 16px;
-	transition: background-color 0.3s ease, transform 0.3s ease; /* Ajoute une transition pour les changements de couleur et de taille */
+	transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 button:hover {
-	background-color: #777777; /* Change la couleur de fond en vert */
-	transform: scale(1.1); /* Agrandit le bouton légèrement */
+	background-color: #282828;
+	transform: scale(1.1);
 }

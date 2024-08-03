@@ -10,6 +10,7 @@ import {
 import ManagePlaylist from "./playlist";
 import PlaylistDetails from "./playlistDetails";
 import Home from "./home";
+import { ReactComponent as HomeIcon } from "./assets/home.svg";
 
 const CLIENT_SECRET = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
 const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
@@ -68,6 +69,15 @@ const App = () => {
 
 	return (
 		<div className="App">
+			<div className="home">
+				<div className="test-home">
+					<HomeIcon className="home-button" onClick={() => navigate(`/`)} />
+					<p>Home</p>
+				</div>
+				<button className="btn-login" onClick={handleLogin}>
+					Log in
+				</button>
+			</div>
 			<Routes>
 				<Route
 					path="/"

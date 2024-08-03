@@ -5,9 +5,9 @@ const Home = ({ handleLogin, token, navigate }) => {
 	return (
 		<div>
 			<header className="App-header">
-				<h1>Spotify Playlist Creator</h1>
+				<h1>Spotify Playlist Manager</h1>
 				{!token ? (
-					<button onClick={handleLogin}>Login to Spotify</button>
+					<div>{""}</div>
 				) : (
 					<div>
 						<p>Logged in!</p>

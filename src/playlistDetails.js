@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import "./playlistDetails.css";
+import { ReactComponent as EditIcon } from "./assets/edit.svg";
+import { ReactComponent as CloseIcon } from "./assets/cross.svg";
+import { ReactComponent as UpIcon } from "./assets/up.svg";
+import { ReactComponent as DownIcon } from "./assets/down.svg";
 
 const PlaylistDetails = ({ token }) => {
 	const { id } = useParams();
@@ -210,67 +215,92 @@ const PlaylistDetails = ({ token }) => {
 			{error && <p style={{ color: "red" }}>{error}</p>}
 			{playlist ? (
 				<div>
-					<h2>{playlist.name}</h2>
-					{isEditingName ? (
-						<div>
-							<input
-								type="text"
-								value={newPlaylistName}
-								onChange={(e) => setNewPlaylistName(e.target.value)}
-								placeholder="New Playlist Name"
-							/>
-							<button onClick={handleUpdatePlaylistName}>Save</button>
+					<div className="edit">
+						<div className="edit-name">
+							<h2>{playlist.name}</h2>
+							{isEditingName ? (
+								<div className="save-edit">
+									<input
+										type="text"
+										value={newPlaylistName}
+										onChange={(e) => setNewPlaylistName(e.target.value)}
+										placeholder="New name"
+									/>
+									<button
+										className="button-save"
+										onClick={handleUpdatePlaylistName}>
+										Save
+									</button>
+								</div>
+							) : (
+								<EditIcon
+									className="edit-icon"
+									onClick={() => setIsEditingName(true)}
+								/>
+							)}
 						</div>
-					) : (
-						<button onClick={() => setIsEditingName(true)}>Update Name</button>
-					)}
-					<p>{playlist.description}</p>
-					{isEditingDescription ? (
-						<div>
-							<input
-								type="text"
-								value={newPlaylistDescription}
-								onChange={(e) => setNewPlaylistDescription(e.target.value)}
-								placeholder="New Playlist Description"
-							/>
-							<button onClick={handleUpdatePlaylistDescription}>Save</button>
+						<div className="edit-desc">
+							<p>{playlist.description}</p>
+							{isEditingDescription ? (
+								<div className="save-edit">
+									<input
+										type="text"
+										value={newPlaylistDescription}
+										onChange={(e) => setNewPlaylistDescription(e.target.value)}
+										placeholder="New description"
+									/>
+									<button
+										className="button-save"
+										onClick={handleUpdatePlaylistDescription}>
+										Save
+									</button>
+								</div>
+							) : (
+								<EditIcon
+									className="edit-icon"
+									onClick={() => setIsEditingDescription(true)}
+								/>
+							)}
 						</div>
-					) : (
-						<button onClick={() => setIsEditingDescription(true)}>
-							Update Description
-						</button>
-					)}
+					</div>
 					<ul>
 						{tracks.map((track, index) => (
-							<li key={track.track.id}>
-								{track.track.name} by{" "}
-								{track.track.artists.map((artist) => artist.name).join(", ")}
-								<button
-									onClick={() =>
-										handleDeleteTrackFromPlaylist(track.track.uri)
-									}>
-									Delete
-								</button>
-								<button
-									onClick={() => handleOrderTrack(index, "up")}
-									disabled={index === 0}>
-									Up
-								</button>
-								<button
-									onClick={() => handleOrderTrack(index, "down")}
-									disabled={index === tracks.length - 1}>
-									Down
-								</button>
+							<li className="track-list" key={track.track.id}>
+								<div>
+									{track.track.name} -{" "}
+									{track.track.artists.map((artist) => artist.name).join(", ")}
+								</div>
+								<div className="buttons-action">
+									<CloseIcon
+										onClick={() =>
+											handleDeleteTrackFromPlaylist(track.track.uri)
+										}
+									/>
+									<UpIcon
+										className="button-up"
+										onClick={() => handleOrderTrack(index, "up")}
+										disabled={index === 0}
+									/>
+									<DownIcon
+										className="button-down"
+										onClick={() => handleOrderTrack(index, "down")}
+										disabled={index === tracks.length - 1}
+									/>
+								</div>
 							</li>
 						))}
 					</ul>
-					<input
-						type="text"
-						placeholder="Track URI"
-						value={trackUri}
-						onChange={(e) => setTrackUri(e.target.value)}
-					/>
-					<button onClick={handleAddTrackToPlaylist}>Add Track</button>
+					<div className="track-url">
+						<input
+							type="text"
+							placeholder="Track URI"
+							value={trackUri}
+							onChange={(e) => setTrackUri(e.target.value)}
+						/>
+						<button className="button-add" onClick={handleAddTrackToPlaylist}>
+							Add track
+						</button>
+					</div>
 				</div>
 			) : (
 				<p>Loading...</p>

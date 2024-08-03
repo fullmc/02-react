@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./playlist.css";
-import { ReactComponent as CloseIcon } from "./assets/Vector.svg";
+import { ReactComponent as CloseIcon } from "./assets/cross.svg";
 
 const ManagePlaylist = ({ token }) => {
 	const [userId, setUserId] = useState("");

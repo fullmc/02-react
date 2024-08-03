@@ -1,7 +1,3 @@
-.App {
-	/* text-align: center; */
-}
-
 .App-logo {
 	height: 40vmin;
 	pointer-events: none;
@@ -15,13 +11,14 @@
 
 .App-header {
 	background-color: #121212;
-	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	font-size: calc(10px + 2vmin);
 	color: white;
+	overflow-y: hidden;
+	height: 100vh;
 }
 
 .App-link {
@@ -35,4 +32,31 @@
 	to {
 		transform: rotate(360deg);
 	}
+}
+
+.home {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	.test-home {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		font-size: 12px;
+		.home-button {
+			cursor: pointer;
+		}
+	}
+}
+
+.btn-login {
+	padding: 1em;
+	font-size: 14px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	font-size: 13px;
+	border: 0.8px solid #1ed760;
+	background-color: #121212;
+	font-family: "AvenirMedium", sans-serif;
 }

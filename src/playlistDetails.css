@@ -1,0 +1,50 @@
+.edit-name,
+.edit-desc,
+.save-edit {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+}
+
+.edit-icon {
+	cursor: pointer;
+}
+
+.button-save {
+	padding: 1em;
+	font-size: 14px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	font-size: 13px;
+}
+
+.track-list {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+
+	li {
+		list-style-type: disc;
+	}
+}
+
+.buttons-action {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	cursor: pointer;
+}
+
+.track-url {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+
+	.button-add {
+		padding: 12px;
+		height: 12px;
+		cursor: pointer;
+		font-size: 12px;
+	}
+}
