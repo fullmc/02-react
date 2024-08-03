@@ -13,8 +13,8 @@ import Home from "./home";
 import { ReactComponent as HomeIcon } from "./assets/home.svg";
 
 const CLIENT_SECRET = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
-const CLIENT_ID = "062547a6c9264cf69181995c1176e18f";
-const REDIRECT_URI = "https://localhost:3000";
+const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
+const REDIRECT_URI = "http://localhost:3000";
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
 const RESPONSE_TYPE = "code";
@@ -36,7 +36,7 @@ const App = () => {
 						grant_type: "authorization_code",
 						code: code,
 						redirect_uri: REDIRECT_URI,
-						client_id: "062547a6c9264cf69181995c1176e18f",
+						client_id: CLIENT_ID,
 						client_secret: CLIENT_SECRET,
 					}),
 					{
