@@ -1,4 +1,15 @@
+# Spotify playlist manager
 
+## Documentation
+
+[Spotify documentation](https://developer.spotify.com/documentation/web-api)
+
+You'll have to sign in (it's free) and follow the steps in order to :  
+- Get a CLIENT_ID
+- Get a CLIENT_SECRET
+- Get an access token
+
+This is mandatory for the use of the project.
 ## Installation
 
 ```bash
