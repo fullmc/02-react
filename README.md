@@ -71,6 +71,15 @@ npm start (or npm run start)
 
 Go on http://localhost:3000
 
+*PS: when adding a track to an existing playlist, the url must be written as `spotify:track:<id>`*
+
+*example: this is a basic spotify track url*
+```plaintext
+https://open.spotify.com/track/7sEE8sHWJpGwaOIGC7R5GI?si=9a8880bff5c646b3
+```
+*The input will require 
+`spotify:track:7sEE8sHWJpGwaOIGC7R5GI`*
+
 ## Related
 
 [Demo](https://www.loom.com/share/ef68c2614f6f4e409d6bb8fa716af0c3?sid=0115e673-6a7c-41d3-a80d-9c8498cd2a37)
