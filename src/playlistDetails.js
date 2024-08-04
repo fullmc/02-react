@@ -175,7 +175,7 @@ const PlaylistDetails = ({ token }) => {
 		}
 
 		if (endIndex < 0 || endIndex > tracks.length) {
-			setError("Invalid track position");
+			setError("Cannot move the last track down or the first track up");
 			return;
 		}
 

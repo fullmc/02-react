@@ -140,14 +140,23 @@ const ManagePlaylist = ({ token }) => {
 
 	const handleAddTrackToPlaylist = (playlistId, track) => {
 		setPlaylists((prevPlaylists) =>
-			prevPlaylists.map((playlist) =>
-				playlist.id === playlistId
-					? {
-							...playlist,
-							tracks: [...playlist.tracks, track],
-					  }
-					: playlist
-			)
+			prevPlaylists.map((playlist) => {
+				if (playlist.id === playlistId) {
+					const trackExists = playlist.tracks.some((t) => t.id === track.id);
+					if (trackExists) {
+						setTimeout(
+							() => setError("This track is already in the playlist"),
+							200
+						);
+						return playlist;
+					}
+					return {
+						...playlist,
+						tracks: [...playlist.tracks, track],
+					};
+				}
+				return playlist;
+			})
 		);
 
 		handleAddTrackToSpotifyPlaylist(playlistId, track.uri);
@@ -366,7 +375,12 @@ const ManagePlaylist = ({ token }) => {
 							disabled={selectedPlaylists.length === 0}>
 							Delete Selected
 						</button>
-						<button onClick={exportPlaylistsAsJson}>Export as JSON</button>
+						<button
+							className="btn-export"
+							onClick={exportPlaylistsAsJson}
+							disabled={selectedPlaylists.length === 0}>
+							Export as JSON
+						</button>
 						<button onClick={handleImportButtonClick}>Import</button>
 						<input
 							type="file"
@@ -413,8 +427,6 @@ const ManagePlaylist = ({ token }) => {
 					))}
 				</ul>
 			</div>
-
-			{error && <p style={{ color: "red" }}>{error}</p>}
 
 			{/* <h2>Search Results</h2> */}
 			<div className="section">
