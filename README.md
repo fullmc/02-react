@@ -2,24 +2,45 @@
 
 ## Documentation
 
-[Spotify documentation](https://developer.spotify.com/documentation/web-api)
+Read the [Spotify documentation](https://developer.spotify.com/documentation/web-api) and follow the guidelines.
 
-You'll have to sign in (it's free) and follow the steps in order to :  
+You'll have to sign in/up (for free) and follow the steps in order to :  
 - Get a CLIENT_ID
 - Get a CLIENT_SECRET
 - Get an access token
 
 This is mandatory for the use of the project.
+
+⚠️ Make sure to set the Redirect URIs to `http://localhost:3000`, and to tick `Web API` as API used.
+
+## Requirements
+
+You must install a few tools to make it work :   
+- A package manager  ( [homebrew](https://brew.sh/) for mac and linux ) 
+- node 
+```bash
+brew install node@20
+```
+- npm
+```bash
+brew install npm 
+```
+
+- dotenv (if your env variables aren't read)
+```bash
+npm install dotenv
+```
+
 ## Installation
 
 ```bash
-  git clone git@github.com:fullmc/02-react.git  
+git clone git@github.com:fullmc/02-react.git  
 ```
 ```bash
-  npm install 
+npm install 
 ```
 
-Then, you will have to create a new file `.env.local` at the root of the project:
+You will have to create a new file `.env.local` at the root of the project:
 ```plaintext
 02-react/
 ├── nodes_modules/
@@ -27,21 +48,25 @@ Then, you will have to create a new file `.env.local` at the root of the project
 ├── public/
 │   ├── [...]
 ├── src/
-│   ├── [...]
+    ├── assets/
+    ├── fonts/
+    ├── [...]
+├── .env.example
 ├── .env.local
 ├── .gitignore
 ├── README.md
 ├── package.json
 └── package-lock.json
 ```
-In this file you'll set your **environment variables** (client_id, client_secret, etc.), every secret information you want to hide from people.
+In this file you'll set your **environment variables** (client_id, client_secret, etc.), every secret information you want to hide from people.  
+Copy the content in `.env.example`, paste it in `.env.local`, and replace the data by your spotify client_id and client_secret (given in your spotify dashboard in settings)
 
-If you ever plan to publish the project, make sure to write `.env.local` in your `.gitignore`.
+⚠️ If you ever plan to publish the project, make sure to write `.env.local` in your `.gitignore`.
 
-Once everything is set up :
+Once everything is set up, run 
 
 ```bash
-  npm start (or npm run start)
+npm start (or npm run start)
 ```
 
-Go on http://localhost:3000.
+Go on http://localhost:3000
