@@ -70,3 +70,9 @@ npm start (or npm run start)
 ```
 
 Go on http://localhost:3000
+
+## Related
+
+[Demo](https://www.loom.com/share/ef68c2614f6f4e409d6bb8fa716af0c3?sid=0115e673-6a7c-41d3-a80d-9c8498cd2a37)
+
+[Code review](https://www.loom.com/share/e709eb922ce44054bf434849ca4b405c?sid=9de22780-0184-41cf-9d4e-bd86d3dbf50d)
