@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+# Spotify playlist manager
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Documentation
 
-## Available Scripts
+Read the [Spotify documentation](https://developer.spotify.com/documentation/web-api) and follow the guidelines.
 
-In the project directory, you can run:
+You'll have to sign in/up (for free) and follow the steps in order to :  
+- Get a CLIENT_ID
+- Get a CLIENT_SECRET
+- Get an access token
 
-### `npm start`
+This is mandatory for the use of the project.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+⚠️ Make sure to set the Redirect URIs to `http://localhost:3000`, and to tick `Web API` as API used.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Requirements
 
-### `npm test`
+You must install a few tools to make it work :   
+- A package manager  ( [homebrew](https://brew.sh/) for mac and linux ) 
+- node 
+```bash
+brew install node@20
+```
+- npm
+```bash
+brew install npm 
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- dotenv (if your env variables aren't read)
+```bash
+npm install dotenv
+```
 
-### `npm run build`
+## Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+git clone git@github.com:fullmc/02-react.git  
+```
+```bash
+npm install 
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+You will have to create a new file `.env.local` at the root of the project:
+```plaintext
+02-react/
+├── nodes_modules/
+│   ├── [...]
+├── public/
+│   ├── [...]
+├── src/
+    ├── assets/
+    ├── fonts/
+    ├── [...]
+├── .env.example
+├── .env.local
+├── .gitignore
+├── README.md
+├── package.json
+└── package-lock.json
+```
+In this file you'll set your **environment variables** (client_id, client_secret, etc.), every secret information you want to hide from people.  
+Copy the content in `.env.example`, paste it in `.env.local`, and replace the data by your spotify client_id and client_secret (given in your spotify dashboard in settings)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+⚠️ If you ever plan to publish the project, make sure to write `.env.local` in your `.gitignore`.
 
-### `npm run eject`
+Once everything is set up, run 
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm start (or npm run start)
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Go on http://localhost:3000
